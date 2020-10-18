@@ -9,6 +9,13 @@ namespace AuthenticationAndAuthorizationSample.Basics
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication("Cookie")
+                .AddCookie("Cookie", options =>
+                {
+                    options.LoginPath = "/Admin/Login";
+                });
+            services.AddAuthorization();
+
             services.AddControllersWithViews();
         }
 
@@ -20,6 +27,9 @@ namespace AuthenticationAndAuthorizationSample.Basics
             }
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
