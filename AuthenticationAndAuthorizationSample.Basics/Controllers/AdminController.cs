@@ -40,5 +40,12 @@ namespace AuthenticationAndAuthorizationSample.Basics.Controllers
 
             return Redirect(model.ReturnUrl);
         }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync("Cookie");
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
