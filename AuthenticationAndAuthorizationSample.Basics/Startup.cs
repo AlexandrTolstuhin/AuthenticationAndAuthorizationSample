@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +15,20 @@ namespace AuthenticationAndAuthorizationSample.Basics
                 {
                     options.LoginPath = "/Admin/Login";
                 });
-            services.AddAuthorization();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Administrator", builder =>
+                {
+                    builder.RequireAssertion(c => c.User.HasClaim(ClaimTypes.Role, "Administrator"));
+                });
+
+                options.AddPolicy("Manager", builder =>
+                {
+                    builder.RequireAssertion(c => 
+                        c.User.HasClaim(ClaimTypes.Role, "Manager") ||
+                        c.User.HasClaim(ClaimTypes.Role, "Administrator"));
+                });
+            });
 
             services.AddControllersWithViews();
         }
