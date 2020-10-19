@@ -14,6 +14,7 @@ namespace AuthenticationAndAuthorizationSample.Basics
                 .AddCookie("Cookie", options =>
                 {
                     options.LoginPath = "/Admin/Login";
+                    options.AccessDeniedPath = "/Home/AccessDenied";
                 });
             services.AddAuthorization(options =>
             {

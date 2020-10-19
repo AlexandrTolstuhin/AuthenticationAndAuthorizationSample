@@ -43,7 +43,7 @@ namespace AuthenticationAndAuthorizationSample.Basics.Controllers
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Role, "Administrator")
+                new Claim(ClaimTypes.Role, "Manager")
             };
             var identity = new ClaimsIdentity(claims, "Cookie");
             var principal = new ClaimsPrincipal(identity);
