@@ -16,6 +16,18 @@ namespace AuthenticationAndAuthorizationSample.Basics.Controllers
             return View();
         }
 
+        [Authorize(Policy = "Manager")]
+        public IActionResult Manager()
+        {
+            return View();
+        }
+
+        [Authorize(Policy = "Administrator")]
+        public IActionResult Administrator()
+        {
+            return View();
+        }
+
         [AllowAnonymous]
         public IActionResult Login(string returnUrl)
         {
@@ -31,7 +43,7 @@ namespace AuthenticationAndAuthorizationSample.Basics.Controllers
 
             var claims = new List<Claim>
             {
-                new Claim("Demo", "Value")
+                new Claim(ClaimTypes.Role, "Manager")
             };
             var identity = new ClaimsIdentity(claims, "Cookie");
             var principal = new ClaimsPrincipal(identity);
