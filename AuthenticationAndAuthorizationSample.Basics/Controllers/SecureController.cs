@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AuthenticationAndAuthorizationSample.Basics.Controllers
 {
     [Authorize]
-    public class AdminController : Controller
+    public class SecureController : Controller
     {
         public IActionResult Index()
         {
