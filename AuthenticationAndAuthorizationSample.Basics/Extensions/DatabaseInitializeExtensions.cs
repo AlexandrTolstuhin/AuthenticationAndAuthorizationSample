@@ -15,6 +15,7 @@ namespace AuthenticationAndAuthorizationSample.Basics.Extensions
 
             var user = new ApplicationUser
             {
+                UserName = "admin",
                 FirstName = "FirstName",
                 LastName = "LastName"
             };
