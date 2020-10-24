@@ -1,6 +1,9 @@
 using System.Security.Claims;
+using AuthenticationAndAuthorizationSample.Basics.Data;
+using AuthenticationAndAuthorizationSample.Basics.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -10,12 +13,19 @@ namespace AuthenticationAndAuthorizationSample.Basics
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication("Cookie")
-                .AddCookie("Cookie", options =>
+            services.AddDbContext<ApplicationDbContext>(options =>
                 {
-                    options.LoginPath = "/Secure/Login";
-                    options.AccessDeniedPath = "/Home/AccessDenied";
-                });
+                    options.UseInMemoryDatabase("MEMORY");
+                })
+                .AddIdentity<ApplicationUser, ApplicationRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Secure/Login";
+                options.AccessDeniedPath = "/Home/AccessDenied";
+            });
+
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("Administrator", builder =>
