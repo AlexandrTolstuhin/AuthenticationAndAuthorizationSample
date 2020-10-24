@@ -1,4 +1,5 @@
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AuthenticationAndAuthorizationSample.Basics.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -18,7 +19,10 @@ namespace AuthenticationAndAuthorizationSample.Basics.Extensions
                 LastName = "LastName"
             };
 
-            await userManager.CreateAsync(user, "password");
+            var result = await userManager.CreateAsync(user, "password");
+
+            if (result.Succeeded) 
+                await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Administrator"));
         }
     }
 }
