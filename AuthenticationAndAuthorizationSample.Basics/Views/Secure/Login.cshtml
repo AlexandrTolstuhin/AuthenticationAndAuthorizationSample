@@ -5,7 +5,10 @@
 <a asp-controller="Home" asp-action="Index">To home</a>
 
 <form asp-action="Login" method="post">
-    <input hidden asp-for="ReturnUrl" />
+    <div asp-validation-summary="All">
+    </div>
+
+    <input hidden asp-for="ReturnUrl"/>
     <div>
         <label>UserName:</label>
         <input asp-for="UserName"/>

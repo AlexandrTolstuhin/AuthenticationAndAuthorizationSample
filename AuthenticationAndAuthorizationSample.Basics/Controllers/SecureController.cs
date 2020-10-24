@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AuthenticationAndAuthorizationSample.Basics.Entities;
 using AuthenticationAndAuthorizationSample.Basics.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthenticationAndAuthorizationSample.Basics.Controllers
@@ -11,6 +13,17 @@ namespace AuthenticationAndAuthorizationSample.Basics.Controllers
     [Authorize]
     public class SecureController : Controller
     {
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+
+        public SecureController(
+            UserManager<ApplicationUser> userManager, 
+            SignInManager<ApplicationUser> signInManager)
+        {
+            _userManager = userManager;
+            _signInManager = signInManager;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -41,21 +54,26 @@ namespace AuthenticationAndAuthorizationSample.Basics.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            var claims = new List<Claim>
+            var user = await _userManager.FindByNameAsync(model.UserName);
+
+            if (user == null)
             {
-                new Claim(ClaimTypes.Role, "Manager")
-            };
-            var identity = new ClaimsIdentity(claims, "Cookie");
-            var principal = new ClaimsPrincipal(identity);
+                ModelState.AddModelError("", "User not found");
+                return View(model);
+            }
 
-            await HttpContext.SignInAsync("Cookie", principal);
+            var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
 
-            return Redirect(model.ReturnUrl);
+            if (result.Succeeded) 
+                return Redirect(model.ReturnUrl);
+
+            ModelState.AddModelError("", "Incorrect password");
+            return View(model);
         }
 
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync("Cookie");
+            await _signInManager.SignOutAsync();
 
             return RedirectToAction("Index", "Home");
         }
