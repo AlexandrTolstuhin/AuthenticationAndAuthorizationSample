@@ -3,6 +3,7 @@ using AuthenticationAndAuthorizationSample.Basics.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AuthenticationAndAuthorizationSample.Basics.Controllers
 {
@@ -47,11 +48,17 @@ namespace AuthenticationAndAuthorizationSample.Basics.Controllers
             return View(model);
         }
 
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
 
             return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }
