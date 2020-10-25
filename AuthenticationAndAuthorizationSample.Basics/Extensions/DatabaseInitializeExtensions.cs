@@ -13,17 +13,29 @@ namespace AuthenticationAndAuthorizationSample.Basics.Extensions
         {
             var userManager = provider.GetService<UserManager<ApplicationUser>>();
 
-            var user = new ApplicationUser
+            var adminUser = new ApplicationUser
             {
                 UserName = "admin",
-                FirstName = "FirstName",
-                LastName = "LastName"
+                FirstName = "FirstName 1",
+                LastName = "LastName 1"
             };
 
-            var result = await userManager.CreateAsync(user, "password");
+            var result = await userManager.CreateAsync(adminUser, "password");
 
             if (result.Succeeded) 
-                await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Administrator"));
+                await userManager.AddClaimAsync(adminUser, new Claim(ClaimTypes.Role, "Administrator"));
+
+            var managerUser = new ApplicationUser
+            {
+                UserName = "manager",
+                FirstName = "FirstName 2",
+                LastName = "LastName 2"
+            };
+
+            result = await userManager.CreateAsync(managerUser, "password");
+
+            if (result.Succeeded)
+                await userManager.AddClaimAsync(managerUser, new Claim(ClaimTypes.Role, "Manager"));
         }
     }
 }
