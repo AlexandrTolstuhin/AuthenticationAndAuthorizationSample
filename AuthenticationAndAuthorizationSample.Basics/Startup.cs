@@ -1,16 +1,24 @@
-using System.Security.Claims;
 using AuthenticationAndAuthorizationSample.Basics.Data;
 using AuthenticationAndAuthorizationSample.Basics.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Security.Claims;
 
 namespace AuthenticationAndAuthorizationSample.Basics
 {
     public class Startup
     {
+        private readonly IConfiguration _configuration;
+
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -27,6 +35,13 @@ namespace AuthenticationAndAuthorizationSample.Basics
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddAuthentication()
+                .AddFacebook(options =>
+                {
+                    options.AppId = _configuration["Authentication:Facebook:AppId"];
+                    options.AppSecret = _configuration["Authentication:Facebook:AppSecret"];
+                });
+
             services.ConfigureApplicationCookie(options =>
             {
                 //options.LoginPath = "/Secure/Login";
@@ -42,7 +57,7 @@ namespace AuthenticationAndAuthorizationSample.Basics
 
                 options.AddPolicy("Manager", builder =>
                 {
-                    builder.RequireAssertion(c => 
+                    builder.RequireAssertion(c =>
                         c.User.HasClaim(ClaimTypes.Role, "Manager") ||
                         c.User.HasClaim(ClaimTypes.Role, "Administrator"));
                 });
