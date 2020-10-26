@@ -1,12 +1,16 @@
 using AuthenticationAndAuthorizationSample.Basics.Data;
 using AuthenticationAndAuthorizationSample.Basics.Entities;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace AuthenticationAndAuthorizationSample.Basics
 {
@@ -40,6 +44,25 @@ namespace AuthenticationAndAuthorizationSample.Basics
                 {
                     options.AppId = _configuration["Authentication:Facebook:AppId"];
                     options.AppSecret = _configuration["Authentication:Facebook:AppSecret"];
+                })
+                .AddOAuth("VK", "VK", config =>
+                {
+                    config.ClientId = _configuration["Authentication:VK:AppId"];
+                    config.ClientSecret = _configuration["Authentication:VK:AppSecret"];
+                    config.ClaimsIssuer = "VK";
+                    config.CallbackPath = new PathString("/signin-vk-token");
+                    config.AuthorizationEndpoint = "https://oauth.vk.com/authorize";
+                    config.TokenEndpoint = "https://oauth.vk.com/access_token";
+                    config.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "user_id");
+                    config.SaveTokens = true;
+                    config.Events = new OAuthEvents
+                    {
+                        OnCreatingTicket = context =>
+                        {
+                            context.RunClaimActions(context.TokenResponse.Response.RootElement);
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
 
             services.ConfigureApplicationCookie(options =>
