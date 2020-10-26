@@ -20,9 +20,15 @@ namespace AuthenticationAndAuthorizationSample.Basics.Controllers
             _signInManager = signInManager;
         }
 
-        public IActionResult Login(string returnUrl)
+        public async Task<IActionResult> Login(string returnUrl)
         {
-            return View(new LoginViewModel { ReturnUrl = returnUrl });
+            var externalProviders = await _signInManager.GetExternalAuthenticationSchemesAsync();
+
+            return View(new LoginViewModel
+            {
+                ReturnUrl = returnUrl,
+                ExternalProviders = externalProviders
+            });
         }
 
         [HttpPost]
@@ -58,6 +64,12 @@ namespace AuthenticationAndAuthorizationSample.Basics.Controllers
 
         public IActionResult AccessDenied()
         {
+            return View();
+        }
+
+        public IActionResult ExternalSingIn()
+        {
+
             return View();
         }
     }

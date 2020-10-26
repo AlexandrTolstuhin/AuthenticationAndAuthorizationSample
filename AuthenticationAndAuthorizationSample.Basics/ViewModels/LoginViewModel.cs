@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authentication;
 
 namespace AuthenticationAndAuthorizationSample.Basics.ViewModels
 {
@@ -12,5 +14,7 @@ namespace AuthenticationAndAuthorizationSample.Basics.ViewModels
 
         [Required]
         public string ReturnUrl { get; set; }
+
+        public IEnumerable<AuthenticationScheme> ExternalProviders { get; set; }
     }
 }
