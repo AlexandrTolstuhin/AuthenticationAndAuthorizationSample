@@ -1,0 +1,18 @@
+﻿@model ExternalLoginViewModel
+
+<h1>Register External</h1>
+
+<form asp-action="RegisterExternal" method="post">
+    <div asp-validation-summary="All">
+    </div>
+
+    <input hidden asp-for="ReturnUrl"/>
+    <div>
+        <label>UserName:</label>
+        <input asp-for="UserName"/>
+        <span asp-validation-for="UserName"></span>
+    </div>
+    <div>
+        <button type="submit">Save</button>
+    </div>
+</form>
