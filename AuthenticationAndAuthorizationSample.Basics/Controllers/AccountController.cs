@@ -1,9 +1,10 @@
 ﻿using AuthenticationAndAuthorizationSample.Basics.Entities;
 using AuthenticationAndAuthorizationSample.Basics.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace AuthenticationAndAuthorizationSample.Basics.Controllers
 {
@@ -34,6 +35,9 @@ namespace AuthenticationAndAuthorizationSample.Basics.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
+            var externalProviders = await _signInManager.GetExternalAuthenticationSchemesAsync();
+            model.ExternalProviders = externalProviders;
+
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -67,10 +71,69 @@ namespace AuthenticationAndAuthorizationSample.Basics.Controllers
             return View();
         }
 
-        public IActionResult ExternalSingIn()
+        public IActionResult ExternalLogin(string provider, string returnUrl)
         {
+            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), new { returnUrl });
 
-            return View();
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+
+            return Challenge(properties, provider);
+        }
+
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl)
+        {
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+
+            if (info == null)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
+            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false, false);
+
+            if (result.Succeeded)
+                return Redirect(returnUrl);
+
+            return RedirectToAction(nameof(RegisterExternal), new ExternalLoginViewModel
+            {
+                ReturnUrl = returnUrl,
+                UserName = info.Principal.FindFirstValue(ClaimTypes.Name)
+            });
+        }
+
+        public IActionResult RegisterExternal(ExternalLoginViewModel model)
+        {
+            return View(model);
+        }
+
+        [HttpPost]
+        [ActionName(nameof(RegisterExternal))]
+        public async Task<IActionResult> RegisterExternalConfirmed(ExternalLoginViewModel model)
+        {
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+                return RedirectToAction(nameof(Login));
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await _userManager.FindByNameAsync(model.UserName);
+
+            if (user == null)
+            {
+                ModelState.AddModelError("", "User not found");
+                return View(model);
+            }
+
+            var identityResult = await _userManager.AddLoginAsync(user, info);
+
+            if (identityResult.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, false);
+                return Redirect(model.ReturnUrl);
+            }
+
+            return View(model);
         }
     }
 }
