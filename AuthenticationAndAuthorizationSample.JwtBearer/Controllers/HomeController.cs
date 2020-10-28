@@ -8,5 +8,10 @@ namespace AuthenticationAndAuthorizationSample.JwtBearer.Controllers
         {
             return View();
         }
+
+        public IActionResult Secret()
+        {
+            return View();
+        }
     }
 }
