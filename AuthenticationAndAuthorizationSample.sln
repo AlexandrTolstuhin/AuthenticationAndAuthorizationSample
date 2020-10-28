@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthenticationAndAuthorizationSample.Basics", "AuthenticationAndAuthorizationSample.Basics\AuthenticationAndAuthorizationSample.Basics.csproj", "{D3AFBCF1-511C-4F25-B89B-E2786573CC5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthenticationAndAuthorizationSample.Basics", "AuthenticationAndAuthorizationSample.Basics\AuthenticationAndAuthorizationSample.Basics.csproj", "{D3AFBCF1-511C-4F25-B89B-E2786573CC5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthenticationAndAuthorizationSample.JwtBearer", "AuthenticationAndAuthorizationSample.JwtBearer\AuthenticationAndAuthorizationSample.JwtBearer.csproj", "{4F4EF471-1CF2-4E58-A58E-A5FED0D1417E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{D3AFBCF1-511C-4F25-B89B-E2786573CC5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3AFBCF1-511C-4F25-B89B-E2786573CC5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3AFBCF1-511C-4F25-B89B-E2786573CC5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F4EF471-1CF2-4E58-A58E-A5FED0D1417E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F4EF471-1CF2-4E58-A58E-A5FED0D1417E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F4EF471-1CF2-4E58-A58E-A5FED0D1417E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F4EF471-1CF2-4E58-A58E-A5FED0D1417E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
