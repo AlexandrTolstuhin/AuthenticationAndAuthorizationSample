@@ -1,0 +1,9 @@
+﻿@model ExternalProvidersViewModel
+
+<h4>Login with external provider</h4>
+<form asp-action="ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl">
+    @foreach (var provider in Model.ExternalProviders)
+    {
+        <button type="submit" name="provider" value="@provider.Name">@provider.DisplayName</button>
+    }
+</form>
