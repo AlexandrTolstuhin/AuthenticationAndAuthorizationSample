@@ -13,4 +13,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.9" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ViewComponents\" />
+  </ItemGroup>
+
 </Project>

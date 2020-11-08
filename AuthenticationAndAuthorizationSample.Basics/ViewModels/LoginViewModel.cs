@@ -14,7 +14,5 @@ namespace AuthenticationAndAuthorizationSample.Basics.ViewModels
 
         [Required]
         public string ReturnUrl { get; set; }
-
-        public IEnumerable<AuthenticationScheme> ExternalProviders { get; set; }
     }
 }

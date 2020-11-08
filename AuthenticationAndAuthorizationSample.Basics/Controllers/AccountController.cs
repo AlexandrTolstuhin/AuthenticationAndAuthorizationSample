@@ -21,23 +21,17 @@ namespace AuthenticationAndAuthorizationSample.Basics.Controllers
             _signInManager = signInManager;
         }
 
-        public async Task<IActionResult> Login(string returnUrl)
+        public IActionResult Login(string returnUrl)
         {
-            var externalProviders = await _signInManager.GetExternalAuthenticationSchemesAsync();
-
             return View(new LoginViewModel
             {
-                ReturnUrl = returnUrl,
-                ExternalProviders = externalProviders
+                ReturnUrl = returnUrl
             });
         }
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            var externalProviders = await _signInManager.GetExternalAuthenticationSchemesAsync();
-            model.ExternalProviders = externalProviders;
-
             if (!ModelState.IsValid)
                 return View(model);
 
